@@ -1,0 +1,16 @@
+.header{
+-fx-background-color: #212A3E;
+}
+.sidebar{
+-fx-background-color: #454545;
+}
+.main-container{
+-fx-border: solid 7px red;
+}
+.icons{
+-fx-background-color: #fff;
+}
+.labels{
+-fx-color:white;
+}
+

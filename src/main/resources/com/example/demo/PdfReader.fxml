@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="735.0" prefWidth="621.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
+   <children>
+      <ToolBar prefHeight="82.0" prefWidth="904.0" styleClass="header" stylesheets="@../../../stylesheets/styles.css">
+         <items>
+            <AnchorPane prefHeight="53.0" prefWidth="871.0">
+               <children>
+                  <TextField layoutX="110.0" layoutY="11.0" prefHeight="31.0" prefWidth="140.0" text="0/" />
+                  <TextField layoutX="721.0" layoutY="11.0" prefHeight="31.0" prefWidth="129.0" promptText="search here" />
+                  <ImageView blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="488.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../assets/zoom-in.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <Label layoutX="477.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom in" textFill="#fcfcfc" />
+                  <Label layoutX="385.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom out" textFill="#fcfcfc" />
+                  <ImageView blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="407.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <image>
+                        <Image url="@../../../assets/zoom-out.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </items>
+      </ToolBar>
+      <ListView layoutY="65.0" prefHeight="747.0" prefWidth="275.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" />
+      <ScrollPane layoutX="275.0" layoutY="67.0" prefHeight="741.0" prefWidth="629.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
+         <content>
+            <AnchorPane prefHeight="743.0" prefWidth="631.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
