@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.stage.FileChooser?>
 
-<AnchorPane id="anchorPane" prefHeight="735.0" prefWidth="621.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
+<AnchorPane id="anchorPane" fx:id="anchorPane" prefHeight="735.0" prefWidth="621.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
 
     <children>
-        <ToolBar prefHeight="63.0" prefWidth="904.0" styleClass="header" stylesheets="@../../../stylesheets/styles.css">
+        <ToolBar fx:id="toolBar" prefHeight="63.0" prefWidth="904.0" styleClass="header" stylesheets="@../../../stylesheets/styles.css">
             <items>
                 <AnchorPane prefHeight="53.0" prefWidth="871.0">
                     <children>
@@ -24,8 +24,8 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </ImageView>
-                        <Hyperlink onAction="#handleZoomInAction" layoutX="477.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom in"  textFill="#fcfcfc" />
-                        <Hyperlink onAction="#handleZoomOutAction" layoutX="385.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom out" textFill="#fcfcfc" />
+                        <Hyperlink layoutX="477.0" layoutY="32.0" onAction="#handleZoomInAction" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom in" textFill="#fcfcfc" />
+                        <Hyperlink layoutX="385.0" layoutY="32.0" onAction="#handleZoomOutAction" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom out" textFill="#fcfcfc" />
                         <ImageView blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="407.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
@@ -34,89 +34,89 @@
                                 <Image url="@../../../assets/zoom-out.png" />
                             </image>
                         </ImageView>
-                  <Label layoutX="40.0" layoutY="16.0" style="-fx-text-fill: red;" text="FBM PDF Reader" />
+                        <Label layoutX="40.0" layoutY="16.0" style="-fx-text-fill: red;" text="FBM PDF Reader" />
                     </children>
                 </AnchorPane>
             </items>
 
         </ToolBar>
-        <ListView layoutX="-1.0" layoutY="96.0" prefHeight="715.0" prefWidth="277.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" />
-        <ScrollPane layoutX="275.0" layoutY="93.0" prefHeight="715.0" prefWidth="582.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
+        <ListView fx:id="listView" layoutX="-1.0" layoutY="96.0" prefHeight="715.0" prefWidth="277.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" />
+        <ScrollPane fx:id="scrollPane" layoutX="275.0" layoutY="93.0" prefHeight="715.0" prefWidth="582.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
             <content>
                 <AnchorPane fx:id="pdfPagesAnchorPane" prefHeight="715.0" prefWidth="585.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
                 </AnchorPane>
             </content>
         </ScrollPane>
-      <AnchorPane layoutX="1.0" layoutY="67.0" prefHeight="32.0" prefWidth="904.0">
-         <children>
-                  <TextField layoutX="397.0" layoutY="-3.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
-               <styleClass>
-                  <String fx:value="header" />
-                  <String fx:value="labels" />
-               </styleClass>
-            </TextField>
-            <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="610.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../assets/marker.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
-            <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="651.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <image>
-                  <Image url="@../../../assets/eye.png" />
-               </image>
-            </ImageView>
-            <MenuBar prefHeight="21.0" prefWidth="905.0" style="-fx-background-color: transparent;">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Open" onAction="#handleOpenAction" />
-                      <MenuItem mnemonicParsing="false" text="Close" />
-                      <MenuItem mnemonicParsing="false" text="Exit" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="View">
-                   <items>
-                       <Menu text="Zoom level">
-                          <items>
-                              <MenuItem text="100%" />
-                              <MenuItem text="200%" />
-                              <MenuItem text="300%" />
-                          </items>
-                       </Menu>
-                   </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </children>
-      </AnchorPane>
-      <VBox layoutX="857.0" layoutY="89.0" prefHeight="722.0" prefWidth="47.0" style="-fx-background-color: #A4BC92;">
-         <children>
-            <AnchorPane prefHeight="739.0" prefWidth="47.0">
-               <children>
-                  <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="4.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../assets/contact-center.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="4.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../assets/search.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-         </children>
-      </VBox>
+        <AnchorPane fx:id="headerAnchorPane" layoutX="1.0" layoutY="67.0" prefHeight="32.0" prefWidth="904.0">
+            <children>
+                <TextField fx:id="pageNumberTextField" layoutX="397.0" layoutY="-3.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
+                    <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="labels" />
+                    </styleClass>
+                </TextField>
+                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="610.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../assets/marker.png" />
+                    </image>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ImageView>
+                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="651.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <image>
+                        <Image url="@../../../assets/eye.png" />
+                    </image>
+                </ImageView>
+                <MenuBar fx:id="menuBar" prefHeight="21.0" prefWidth="905.0" style="-fx-background-color: transparent;">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" />
+                                <MenuItem mnemonicParsing="false" text="Close" />
+                                <MenuItem mnemonicParsing="false" text="Exit" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="View">
+                            <items>
+                                <Menu text="Zoom level">
+                                    <items>
+                                        <MenuItem text="100%" />
+                                        <MenuItem text="200%" />
+                                        <MenuItem text="300%" />
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </children>
+        </AnchorPane>
+        <VBox fx:id="rightSidebar" layoutX="857.0" layoutY="89.0" prefHeight="722.0" prefWidth="47.0" style="-fx-background-color: #A4BC92;">
+            <children>
+                <AnchorPane prefHeight="739.0" prefWidth="47.0">
+                    <children>
+                        <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="4.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../assets/contact-center.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="4.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../assets/search.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+            </children>
+        </VBox>
     </children>
 </AnchorPane>
