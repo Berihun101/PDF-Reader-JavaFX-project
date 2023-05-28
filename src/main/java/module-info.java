@@ -1,6 +1,8 @@
 module com.example.demo {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.apache.pdfbox;
+    requires java.desktop;
 
 
     opens com.example.demo to javafx.fxml;
