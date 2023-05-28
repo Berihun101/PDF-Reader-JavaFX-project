@@ -1,11 +1,16 @@
 package com.example.demo;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import java.awt.image.BufferedImage;
@@ -17,6 +22,9 @@ public class PdfReaderController {
     private ScrollPane scrollPane;
 
     @FXML
+    private AnchorPane pdfPagesAnchorPane;
+
+    @FXML
     private void handleOpenAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open PDF File");
@@ -25,6 +33,8 @@ public class PdfReaderController {
 
         if (selectedFile != null) {
             try {
+                // Initialize the scrollPane object before calling renderPdf()
+                scrollPane = new ScrollPane();
                 renderPdf(selectedFile);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -48,13 +58,26 @@ public class PdfReaderController {
 
     private void renderPdf(File file) throws IOException {
         PDDocument document = PDDocument.load(file);
-        PDFRenderer pdfRenderer = new PDFRenderer(document);
-        int numPages = document.getNumberOfPages();
+        PDFRenderer pdfRenderer =new PDFRenderer(document);
 
-        for (int pageIndex = 0; pageIndex < numPages; pageIndex++) {
-            javafx.scene.image.Image fxImage = convertPdfPageToImage(pdfRenderer, pageIndex);
-            javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(fxImage);
-            scrollPane.setContent(imageView);
+        double yPosition = 0.0;
+
+        for (int i = 0; i < document.getNumberOfPages(); i++) {
+            PDPage page = document.getPage(i);
+            BufferedImage image = pdfRenderer.renderImageWithDPI(i, 300);
+            ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
+            imageView.setPreserveRatio(true);
+            imageView.setFitWidth(pdfPagesAnchorPane.getWidth());
+            imageView.setLayoutY(yPosition);
+            pdfPagesAnchorPane.getChildren().add(imageView);
+            yPosition += imageView.getBoundsInLocal().getHeight();
+
+            // Free memory by removing image data from the BufferedImage
+            image.flush();
+            image = null;
+
+            // Free memory by removing image data from the PDFRenderer
+            pdfRenderer.clearResources();
         }
 
         document.close();
@@ -64,6 +87,6 @@ public class PdfReaderController {
         // Adjust the DPI value as needed for the desired image quality
         final int dpi = 150;
         BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, dpi);
-        return javafx.embed.swing.SwingFXUtils.toFXImage(bufferedImage, null);
+        return javafx.embed.swing.SwingFXUtils.toFXImage(bufferedImage,null);
     }
 }

@@ -43,10 +43,7 @@
         <ListView layoutX="-1.0" layoutY="96.0" prefHeight="715.0" prefWidth="277.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" />
         <ScrollPane layoutX="275.0" layoutY="93.0" prefHeight="715.0" prefWidth="582.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
             <content>
-                <AnchorPane prefHeight="715.0" prefWidth="585.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
-                    <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                    </cursor>
+                <AnchorPane fx:id="pdfPagesAnchorPane" prefHeight="715.0" prefWidth="585.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
                 </AnchorPane>
             </content>
         </ScrollPane>
