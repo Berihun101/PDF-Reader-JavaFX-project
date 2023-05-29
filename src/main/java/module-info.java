@@ -3,6 +3,7 @@ module com.example.demo {
     requires javafx.fxml;
     requires org.apache.pdfbox;
     requires java.desktop;
+    requires javafx.graphics;
     requires javafx.swing;
 
 

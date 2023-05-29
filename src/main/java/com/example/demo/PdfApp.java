@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
 public class PdfApp extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PdfApp.class.getResource("pdfReader.fxml"));
@@ -17,7 +19,7 @@ public class PdfApp extends Application {
 //        Image image = new Image("");
 //        stage.getIcons().add(image);
 //        stage.setMaximized(true);
-        stage.setScene(scene);
+      stage.setScene(scene);
         stage.show();
     }
 
@@ -25,4 +27,5 @@ public class PdfApp extends Application {
 
         launch();
     }
+
 }

@@ -3,6 +3,7 @@ package com.example.demo;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -21,9 +23,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
+
 public class PdfReaderController implements Initializable {
     @FXML
-    private ScrollPane scrollPane;
+       private ScrollPane scrollPane;
 
     @FXML
     private AnchorPane anchorPane;
@@ -33,7 +40,6 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private ListView listView;
-
 
     @FXML
     private AnchorPane pdfPagesAnchorPane;
@@ -50,6 +56,7 @@ public class PdfReaderController implements Initializable {
     @FXML
     private VBox rightSidebar;
 
+    private Stage stage;
 
     @FXML
     private void handleOpenAction() {
@@ -68,6 +75,46 @@ public class PdfReaderController implements Initializable {
             }
         }
     }
+    @FXML
+    private void handleCloseAction() {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation");
+        confirmation.setHeaderText("Are you sure you want to close the PDF?");
+        confirmation.setContentText("Press OK to close or Cancel to stay.");
+        ButtonType okButton = ButtonType.OK;
+        ButtonType cancelButton = ButtonType.CANCEL;
+        confirmation.getButtonTypes().setAll(okButton, cancelButton);
+        confirmation.showAndWait().ifPresent(response -> {
+            if (response == okButton) {
+                pdfPagesAnchorPane.getChildren().clear();
+                scrollPane.setContent(null);
+                scrollPane = null;
+            }
+        });
+    }
+
+
+
+
+    @FXML
+    private void handleExitAction() {
+        Alert confirmation = new Alert(AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation");
+        confirmation.setHeaderText("Are you sure you want to exit?");
+        confirmation.setContentText("Press OK to exit or Cancel to stay.");
+        ButtonType okButton = ButtonType.OK;
+        ButtonType cancelButton = ButtonType.CANCEL;
+        confirmation.getButtonTypes().setAll(okButton, cancelButton);
+        confirmation.showAndWait().ifPresent(response -> {
+            if (response == okButton) {
+                Platform.exit();
+            }
+        });
+    }
+
+
+
+
 
     @FXML
     private void handleZoomInAction() {
@@ -133,4 +180,7 @@ public class PdfReaderController implements Initializable {
         // Set the pageNumberTextField to stretch horizontally
         pageNumberTextField.setMaxWidth(Double.MAX_VALUE);
     }
+
+
+
 }
