@@ -3,6 +3,10 @@ package com.example.demo;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -29,6 +33,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
 public class PdfReaderController implements Initializable {
+
+    private PDDocument document;
+    private PDFRenderer pdfRenderer;
+
+    private VBox pdfPagesContainer;
     @FXML
        private ScrollPane scrollPane;
 
@@ -134,21 +143,81 @@ public class PdfReaderController implements Initializable {
         PDDocument document = PDDocument.load(file);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
 
-        double yPosition = 0.0;
+        listView.getItems().clear();
+        pageNumberTextField.setText("1");
+
+        pdfPagesAnchorPane.getChildren().clear();
+        scrollPane.setVvalue(0.0);
+
+        scrollPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+            fitPdfToScrollPane();
+        });
+        scrollPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+            fitPdfToScrollPane();
+        });
+
+        VBox pdfPagesContainer = new VBox();
+        pdfPagesContainer.setFillWidth(true);
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
             PDPage page = document.getPage(i);
-            BufferedImage image = pdfRenderer.renderImageWithDPI(i, 300);
+            BufferedImage image = pdfRenderer.renderImageWithDPI(i, 96);
             ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
             imageView.setPreserveRatio(true);
-            imageView.setFitWidth(pdfPagesAnchorPane.getWidth());
-            imageView.setLayoutY(yPosition);
-            pdfPagesAnchorPane.getChildren().add(imageView);
-            yPosition += imageView.getBoundsInLocal().getHeight();
+            imageView.fitWidthProperty().bind(pdfPagesAnchorPane.widthProperty()); // Bind width to anchor pane
+
+            pdfPagesContainer.getChildren().add(imageView);
+            VBox.setMargin(imageView, new Insets(10));
         }
 
-        document.close();
+        pdfPagesAnchorPane.getChildren().add(pdfPagesContainer);
+        scrollPane.setContent(pdfPagesAnchorPane);
+
+        fitPdfToScrollPane(); // Fit the PDF to the scrollpane initially
+
+        // Update the ListView with page numbers
+        for (int i = 1; i <= document.getNumberOfPages(); i++) {
+            listView.getItems().add(Integer.toString(i));
+        }
+
+        // Set the event handler for ListView selection
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+                scrollPane.setVvalue((double) selectedIndex / document.getNumberOfPages());
+            }
+        });
     }
+
+    private void fitPdfToScrollPane() {
+        double scrollPaneWidth = scrollPane.getWidth();
+        double scrollPaneHeight = scrollPane.getHeight();
+
+        pdfPagesAnchorPane.setPrefWidth(scrollPaneWidth);
+        pdfPagesAnchorPane.setPrefHeight(scrollPaneHeight);
+
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+
+        pdfPagesContainer.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            double pageWidth = imageView.getImage().getWidth();
+            double pageHeight = imageView.getImage().getHeight();
+
+            double scaleX = scrollPaneWidth / pageWidth;
+            double scaleY = scrollPaneHeight / pageHeight;
+            double scale = Math.min(scaleX, scaleY);
+
+            imageView.setFitWidth(pageWidth * scale);
+            imageView.setFitHeight(pageHeight * scale);
+        });
+    }
+
+
+
+
+
+
+
 
     private Image convertPdfPageToImage(PDFRenderer pdfRenderer, int pageIndex) throws IOException {
         // Adjust the DPI value as needed for the desired image quality
