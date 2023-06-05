@@ -32,6 +32,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
+import static com.example.demo.PdfApp.sceneFactory;
+
 public class PdfReaderController implements Initializable {
 
     private PDDocument document;
@@ -120,6 +122,12 @@ public class PdfReaderController implements Initializable {
             }
         });
     }
+
+    @FXML
+    private void handleAboutAction() throws IOException {
+        PdfApp.sceneFactory("/com/example/demo/about");
+    }
+
 
 
 
@@ -211,6 +219,8 @@ public class PdfReaderController implements Initializable {
             imageView.setFitHeight(pageHeight * scale);
         });
     }
+
+
 
 
 
