@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.AboutusController">
+   <top>
+      <ToolBar prefHeight="69.0" prefWidth="600.0" style="-fx-background-color: #025464;" BorderPane.alignment="CENTER">
+         <items>
+            <Button mnemonicParsing="false" onAction="#handleBackAction" style="-fx-background-color: #025464;" text="Back" textFill="#f60b0b" />
+            <ImageView fitHeight="65.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="67.0" fitWidth="107.0">
+               <image>
+                  <Image url="@../../../assets/logo.png" />
+               </image>
+            </ImageView>
+            <Label text="About MFB Reader" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="31.0" />
+               </font>
+            </Label>
+         </items></ToolBar>
+   </top>
+   <center>
+      <TextArea editable="false" prefHeight="338.0" prefWidth="600.0" style="fil: red;" text="About MFB PDF Reader&#10;&#10;Version: 1.0.0&#10;Developed by: MFB Technologies&#10;Website: www.mfbtech.com&#10;&#10;Description:&#10;MFB PDF Reader is a versatile and user-friendly application that allows you to view, search, and annotate PDF documents with ease. It provides a comprehensive set of features for managing your PDF files efficiently.&#10;&#10;Key Features:&#10;*View PDF documents with high-quality rendering.&#10;*Search for specific keywords or phrases within documents.&#10;*Annotate PDFs with highlights, comments, and bookmarks.&#10;*Navigate through multi-page documents using intuitive controls.&#10;*Organize and manage your PDF library with folders and favorites.&#10;*Share documents via email or other compatible apps.&#10;*Adjust viewing options such as zoom, rotation, and page layout.&#10;&#10;System Requirements:&#10;Operating System:&#10; Windows 10, macOS 10.12, iOS 12, Android 8.0, or later.&#10;Processor:&#10; 2 GHz dual-core or higher.RAM: 2 GB or more.&#10;Storage Space: &#10;100 MB of available disk space.&#10;Release Notes (v1.0.0):&#10;Enhanced document rendering for improved clarity and speed.&#10;Added support for advanced search options, including case-sensitive and whole-word search.&#10;Improved annotation features with the ability to customize colors and styles.&#10;Implemented a night mode for comfortable reading in low-light environments.&#10;Fixed various bugs and performance optimizations.&#10;&#10;Acknowledgments:&#10;MFB PDF Reader utilizes the following open-source libraries and resources:&#10;Apache PDFBox (https://pdfbox.apache.org)&#10;Font Awesome (https://fontawesome.com)&#10;&#10;Privacy Policy:&#10;For information about our privacy practices, please visit our website and refer to our privacy policy.&#10;Copyright © 2023 MFB Technologies. All rights reserved.&#10;Legal Disclaimer:&#10;MFB PDF Reader is provided &quot;as is&quot; without warranty of any kind. We are not liable for any damages or losses incurred while using the application.&#10;Contact:&#10;For support or inquiries, please email us at support@mfbtech.com. We appreciate your feedback and suggestions for improving our app.&#10;" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
