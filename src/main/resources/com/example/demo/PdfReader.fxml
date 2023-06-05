@@ -21,15 +21,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="anchorPane" fx:id="anchorPane" prefHeight="634.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
+<AnchorPane id="anchorPane" fx:id="anchorPane" prefHeight="928.0" prefWidth="1485.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
 
     <children>
         <ToolBar fx:id="toolBar" prefHeight="63.0" prefWidth="904.0" styleClass="header" stylesheets="@../../../stylesheets/styles.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <items>
-                <AnchorPane prefHeight="53.0" prefWidth="871.0">
+                <AnchorPane prefHeight="53.0" prefWidth="1179.0">
                     <children>
-                        <TextField fx:id="search" layoutX="721.0" layoutY="11.0" prefHeight="31.0" prefWidth="129.0" promptText="search here" />
-                        <ImageView fx:id="zoomInIcon" blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="488.0" layoutY="4.0" onMouseClicked="#handleZoomInAction" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="zoomInIcon" blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="973.0" layoutY="6.0" onMouseClicked="#handleZoomInAction" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../../../assets/zoom-in.png" />
                             </image>
@@ -37,9 +36,9 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </ImageView>
-                        <Label layoutX="477.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom in" textFill="#fcfcfc" />
-                        <Label layoutX="385.0" layoutY="32.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom out" textFill="#fcfcfc" />
-                        <ImageView fx:id="zoomOutIcon" blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="407.0" layoutY="4.0" onMouseClicked="#handleZoomOutAction" pickOnBounds="true" preserveRatio="true">
+                        <Label layoutX="962.0" layoutY="27.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom in" textFill="#fcfcfc" />
+                        <Label layoutX="881.0" layoutY="27.0" prefHeight="21.0" prefWidth="64.0" styleClass="labels" stylesheets="@../../../stylesheets/styles.css" text="zoom out" textFill="#fcfcfc" />
+                        <ImageView fx:id="zoomOutIcon" blendMode="OVERLAY" fitHeight="21.0" fitWidth="26.0" layoutX="902.0" layoutY="6.0" onMouseClicked="#handleZoomOutAction" pickOnBounds="true" preserveRatio="true">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
@@ -50,29 +49,30 @@
                         <Label layoutX="40.0" layoutY="16.0" style="-fx-text-fill: red;" text="FBM PDF Reader" />
                     </children>
                 </AnchorPane>
+                  <TextField fx:id="search" prefHeight="31.0" prefWidth="129.0" promptText="search here" />
             </items>
 
         </ToolBar>
-        <ListView fx:id="listView" layoutX="-1.0" layoutY="101.0" prefHeight="533.0" prefWidth="277.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="101.0">
+        <ListView fx:id="listView" layoutX="-2.0" layoutY="101.0" prefHeight="823.0" prefWidth="401.0" styleClass="sidebar" stylesheets="@../../../stylesheets/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-2.0" AnchorPane.topAnchor="101.0">
             <VBox.vgrow>
                 <Priority fx:constant="ALWAYS" />
             </VBox.vgrow>
         </ListView>
-        <ScrollPane fx:id="scrollPane" layoutX="275.0" layoutY="101.0" prefHeight="533.0" prefWidth="582.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="276.0" AnchorPane.rightAnchor="47.0" AnchorPane.topAnchor="101.0">
+        <ScrollPane fx:id="scrollPane" layoutX="399.0" layoutY="101.0" prefHeight="827.0" prefWidth="1039.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="47.0" AnchorPane.topAnchor="101.0">
             <content>
-                <AnchorPane fx:id="pdfPagesAnchorPane" prefHeight="572.0" prefWidth="585.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css">
+                <AnchorPane fx:id="pdfPagesAnchorPane" prefHeight="828.0" prefWidth="940.0" styleClass="main-container" stylesheets="@../../../stylesheets/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 </AnchorPane>
             </content>
         </ScrollPane>
         <AnchorPane fx:id="headerAnchorPane" layoutX="1.0" layoutY="67.0" prefHeight="32.0" prefWidth="904.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <TextField fx:id="pageNumberTextField" layoutX="400.0" layoutY="-1.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
+                <TextField fx:id="pageNumberTextField" layoutX="819.0" layoutY="1.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
                     <styleClass>
                         <String fx:value="header" />
                         <String fx:value="labels" />
                     </styleClass>
                 </TextField>
-                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="610.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="1174.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../../assets/marker.png" />
                     </image>
@@ -80,7 +80,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </ImageView>
-                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="651.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="1221.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
@@ -88,7 +88,7 @@
                         <Image url="@../../../assets/eye.png" />
                     </image>
                 </ImageView>
-                <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="39.0" prefWidth="905.0" style="-fx-background-color: transparent;">
+                <MenuBar fx:id="menuBar" layoutX="-1.0" prefHeight="36.0" prefWidth="401.0" style="-fx-background-color: transparent;">
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
@@ -117,7 +117,7 @@
                 </MenuBar>
             </children>
         </AnchorPane>
-        <VBox fx:id="rightSidebar" layoutX="857.0" layoutY="89.0" prefHeight="722.0" prefWidth="47.0" style="-fx-background-color: #A4BC92;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
+        <VBox fx:id="rightSidebar" layoutX="857.0" layoutY="66.0" prefHeight="568.0" prefWidth="47.0" style="-fx-background-color: #A4BC92;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="66.0">
             <VBox.vgrow>
                 <Priority fx:constant="ALWAYS" />
             </VBox.vgrow>

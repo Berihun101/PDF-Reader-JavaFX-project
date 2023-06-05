@@ -11,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -149,31 +146,44 @@ public class PdfReaderController implements Initializable {
         pdfPagesAnchorPane.getChildren().clear();
         scrollPane.setVvalue(0.0);
 
-        scrollPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            fitPdfToScrollPane();
-        });
-        scrollPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-            fitPdfToScrollPane();
-        });
-
         VBox pdfPagesContainer = new VBox();
         pdfPagesContainer.setFillWidth(true);
+
+        // Set margin for the VBox (centering it vertically)
+        Insets vboxMargin = new Insets(20, 0, 20, 0);
+        VBox.setMargin(pdfPagesContainer, vboxMargin);
+
+        // Bind the VBox height to the ScrollPane height
+        pdfPagesContainer.prefHeightProperty().bind(scrollPane.heightProperty());
+
+        // Add the VBox to an AnchorPane
+        AnchorPane anchorPane = new AnchorPane(pdfPagesContainer);
+        pdfPagesAnchorPane.getChildren().add(anchorPane);
+
+        // Update the VBox width when the ScrollPane width changes
+        scrollPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double scrollPaneWidth = newValue.doubleValue();
+            double vboxWidth = scrollPaneWidth - vboxMargin.getLeft() - vboxMargin.getRight();
+            pdfPagesContainer.setPrefWidth(vboxWidth);
+        });
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
             PDPage page = document.getPage(i);
             BufferedImage image = pdfRenderer.renderImageWithDPI(i, 96);
             ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
             imageView.setPreserveRatio(true);
-            imageView.fitWidthProperty().bind(pdfPagesAnchorPane.widthProperty()); // Bind width to anchor pane
 
-            pdfPagesContainer.getChildren().add(imageView);
-            VBox.setMargin(imageView, new Insets(10));
+            StackPane imageContainer = new StackPane(imageView);
+            imageContainer.setStyle("-fx-background-color: white");
+
+            pdfPagesContainer.getChildren().add(imageContainer);
+            VBox.setMargin(imageContainer, new Insets(10));
         }
 
-        pdfPagesAnchorPane.getChildren().add(pdfPagesContainer);
-        scrollPane.setContent(pdfPagesAnchorPane);
+        // Center the VBox within the ScrollPane vertically
+        VBox.setVgrow(pdfPagesContainer, Priority.ALWAYS);
 
-        fitPdfToScrollPane(); // Fit the PDF to the scrollpane initially
+        scrollPane.setContent(pdfPagesAnchorPane);
 
         // Update the ListView with page numbers
         for (int i = 1; i <= document.getNumberOfPages(); i++) {
@@ -185,33 +195,20 @@ public class PdfReaderController implements Initializable {
             if (newValue != null) {
                 int selectedIndex = listView.getSelectionModel().getSelectedIndex();
                 scrollPane.setVvalue((double) selectedIndex / document.getNumberOfPages());
+                updatePageNumberText(selectedIndex + 1, document.getNumberOfPages());
             }
         });
-    }
 
-    private void fitPdfToScrollPane() {
-        double scrollPaneWidth = scrollPane.getWidth();
-        double scrollPaneHeight = scrollPane.getHeight();
-
-        pdfPagesAnchorPane.setPrefWidth(scrollPaneWidth);
-        pdfPagesAnchorPane.setPrefHeight(scrollPaneHeight);
-
-        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
-
-        pdfPagesContainer.getChildren().forEach(node -> {
-            ImageView imageView = (ImageView) node;
-            double pageWidth = imageView.getImage().getWidth();
-            double pageHeight = imageView.getImage().getHeight();
-
-            double scaleX = scrollPaneWidth / pageWidth;
-            double scaleY = scrollPaneHeight / pageHeight;
-            double scale = Math.min(scaleX, scaleY);
-
-            imageView.setFitWidth(pageWidth * scale);
-            imageView.setFitHeight(pageHeight * scale);
+        // Add listener to scrollPane vvalue property to update pageNumberTextField
+        scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            int currentPage = (int) Math.ceil(newValue.doubleValue() * document.getNumberOfPages());
+            updatePageNumberText(currentPage, document.getNumberOfPages());
         });
     }
 
+    private void updatePageNumberText(int currentPage, int totalPages) {
+        pageNumberTextField.setText(currentPage + " / " + totalPages);
+    }
 
 
 
