@@ -9,12 +9,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -57,6 +57,9 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private AnchorPane headerAnchorPane;
+
+    @FXML
+    private Button eyebtn;
 
     @FXML
     private TextField pageNumberTextField;
@@ -127,6 +130,38 @@ public class PdfReaderController implements Initializable {
     private void handleAboutAction() throws IOException {
         PdfApp.sceneFactory("/com/example/demo/about");
     }
+
+    @FXML
+    private void applyBlueLightFilter() {
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+
+        pdfPagesContainer.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            Image image = imageView.getImage();
+
+            PixelReader pixelReader = image.getPixelReader();
+            int width = (int) image.getWidth();
+            int height = (int) image.getHeight();
+            WritableImage filteredImage = new WritableImage(width, height);
+            PixelWriter pixelWriter = filteredImage.getPixelWriter();
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    Color color = pixelReader.getColor(x, y);
+
+                    double red = ((Color) color).getRed();
+                    double green = color.getGreen();
+                    double blue = color.getBlue() * 0.8;
+
+                    pixelWriter.setColor(x, y, new Color(red, green, blue, color.getOpacity()));
+                }
+            }
+
+            // Update the ImageView with the filtered image
+            imageView.setImage(filteredImage);
+        });
+    }
+
 
 
 

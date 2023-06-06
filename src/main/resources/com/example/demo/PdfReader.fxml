@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -61,28 +62,7 @@
         </ScrollPane>
         <AnchorPane fx:id="headerAnchorPane" layoutX="1.0" layoutY="67.0" prefHeight="32.0" prefWidth="904.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <TextField fx:id="pageNumberTextField" layoutX="400.0" layoutY="-1.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
-                    <styleClass>
-                        <String fx:value="header" />
-                        <String fx:value="labels" />
-                    </styleClass>
-                </TextField>
-                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="610.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../../../assets/marker.png" />
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                </ImageView>
-                <ImageView fitHeight="21.0" fitWidth="31.0" layoutX="651.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <image>
-                        <Image url="@../../../assets/eye.png" />
-                    </image>
-                </ImageView>
+            <Button fx:id="eyebtn1" layoutX="601.0" mnemonicParsing="false" onAction="#applyBlueLightFilter" prefHeight="31.0" prefWidth="39.0" style="-fx-background-color: #f4f4f4;" text="    " />
                 <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="39.0" prefWidth="905.0" style="-fx-background-color: transparent;">
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
@@ -110,6 +90,29 @@
                         </Menu>
                     </menus>
                 </MenuBar>
+            <Button fx:id="eyebtn" layoutX="657.0" layoutY="4.0" mnemonicParsing="false" onAction="#applyBlueLightFilter" prefHeight="25.0" prefWidth="39.0" style="-fx-background-color: #f4f4f4;" text="    " />
+                <TextField fx:id="pageNumberTextField" layoutX="400.0" layoutY="-1.0" prefHeight="21.0" prefWidth="140.0" stylesheets="@../../../stylesheets/styles.css" text="0/">
+                    <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="labels" />
+                    </styleClass>
+                </TextField>
+                <ImageView fitHeight="21.0" fitWidth="21.0" layoutX="610.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../assets/marker.png" />
+                    </image>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ImageView>
+                <ImageView fitHeight="21.0" fitWidth="21.0" layoutX="666.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <image>
+                        <Image url="@../../../assets/eye.png" />
+                    </image>
+                </ImageView>
             </children>
         </AnchorPane>
         <VBox fx:id="rightSidebar" layoutX="857.0" layoutY="89.0" prefHeight="722.0" prefWidth="47.0" style="-fx-background-color: #A4BC92;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
