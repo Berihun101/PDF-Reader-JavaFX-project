@@ -43,5 +43,4 @@ public class PdfApp extends Application {
         return FXMLLoader.load(Objects.requireNonNull(PdfApp.class.getResource(fxml + ".fxml")));
     }
 
-
 }

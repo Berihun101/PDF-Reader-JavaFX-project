@@ -62,18 +62,6 @@ public class PdfReaderController implements Initializable {
     private Button eyebtn;
 
     @FXML
-    private Button penbtn;
-    @FXML
-    private Button darkbtn;
-
-    @FXML
-    private Button zinbtn;
-
-    @FXML
-    private Button zoutbtn;
-
-
-    @FXML
     private TextField pageNumberTextField;
 
     @FXML
@@ -121,24 +109,6 @@ public class PdfReaderController implements Initializable {
 
 
 
-    @FXML
-    private void handleFullScreenAction() {
-        Stage currentStage = (Stage) anchorPane.getScene().getWindow();
-
-        if (currentStage.isFullScreen()) {
-            currentStage.setFullScreen(false);
-            currentStage.setMaximized(false);
-            currentStage.setHeight(600); // Set the desired height when exiting fullscreen
-            currentStage.setWidth(800); // Set the desired width when exiting fullscreen
-        } else {
-            currentStage.setFullScreen(true);
-            currentStage.setMaximized(true);
-        }
-    }
-
-
-
-
 
     @FXML
     private void handleExitAction() {
@@ -160,30 +130,6 @@ public class PdfReaderController implements Initializable {
     private void handleAboutAction() throws IOException {
         PdfApp.sceneFactory("/com/example/demo/about");
     }
-
-    @FXML
-    private void handleDarkModeAction() {
-        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
-
-        if (darkbtn.getStyleClass().contains("dark-mode")) {
-            // Switch to light mode
-            darkbtn.getStyleClass().remove("dark-mode");
-            pdfPagesContainer.setStyle("-fx-background-color: white;");
-            headerAnchorPane.setStyle("-fx-background-color: #f4f4f4;");
-            rightSidebar.setStyle("-fx-background-color: #a4bc92;");
-            scrollPane.setStyle("-fx-background-color: white;");
-        } else {
-            // Switch to dark mode
-            darkbtn.getStyleClass().add("dark-mode");
-            pdfPagesContainer.setStyle("-fx-background-color: #1c1c1c;");
-            headerAnchorPane.setStyle("-fx-background-color: #252525;");
-            rightSidebar.setStyle("-fx-background-color: #252525;");
-            scrollPane.setStyle("-fx-background-color: #1c1c1c;");
-
-        }
-    }
-
-
 
     @FXML
     private void applyBlueLightFilter() {
@@ -224,18 +170,17 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private void handleZoomInAction() {
-        double currentZoom = pdfPagesContainer.getScaleX();
-        pdfPagesContainer.setScaleX(currentZoom + 0.1);
-        pdfPagesContainer.setScaleY(currentZoom + 0.1);
+        double currentZoom = scrollPane.getContent().getScaleX();
+        scrollPane.getContent().setScaleX(currentZoom + 0.1);
+        scrollPane.getContent().setScaleY(currentZoom + 0.1);
     }
 
     @FXML
     private void handleZoomOutAction() {
-        double currentZoom = pdfPagesContainer.getScaleX();
-        pdfPagesContainer.setScaleX(currentZoom - 0.1);
-        pdfPagesContainer.setScaleY(currentZoom - 0.1);
+        double currentZoom = scrollPane.getContent().getScaleX();
+        scrollPane.getContent().setScaleX(currentZoom - 0.1);
+        scrollPane.getContent().setScaleY(currentZoom - 0.1);
     }
-
 
     private void renderPdf(File file) throws IOException {
         PDDocument document = PDDocument.load(file);
@@ -305,7 +250,7 @@ public class PdfReaderController implements Initializable {
             double scaleY = scrollPaneHeight / pageHeight;
             double scale = Math.min(scaleX, scaleY);
 
-            imageView.fitWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+            imageView.setFitWidth(pageWidth * scale);
             imageView.setFitHeight(pageHeight * scale);
         });
     }
