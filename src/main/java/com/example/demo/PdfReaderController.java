@@ -9,9 +9,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.image.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -38,7 +41,7 @@ public class PdfReaderController implements Initializable {
 
     private VBox pdfPagesContainer;
     @FXML
-       private ScrollPane scrollPane;
+    private ScrollPane scrollPane;
 
     @FXML
     private AnchorPane anchorPane;
@@ -54,6 +57,21 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private AnchorPane headerAnchorPane;
+
+    @FXML
+    private Button eyebtn;
+
+    @FXML
+    private Button penbtn;
+    @FXML
+    private Button darkbtn;
+
+    @FXML
+    private Button zinbtn;
+
+    @FXML
+    private Button zoutbtn;
+
 
     @FXML
     private TextField pageNumberTextField;
@@ -103,6 +121,24 @@ public class PdfReaderController implements Initializable {
 
 
 
+    @FXML
+    private void handleFullScreenAction() {
+        Stage currentStage = (Stage) anchorPane.getScene().getWindow();
+
+        if (currentStage.isFullScreen()) {
+            currentStage.setFullScreen(false);
+            currentStage.setMaximized(false);
+            currentStage.setHeight(600); // Set the desired height when exiting fullscreen
+            currentStage.setWidth(800); // Set the desired width when exiting fullscreen
+        } else {
+            currentStage.setFullScreen(true);
+            currentStage.setMaximized(true);
+        }
+    }
+
+
+
+
 
     @FXML
     private void handleExitAction() {
@@ -125,6 +161,62 @@ public class PdfReaderController implements Initializable {
         PdfApp.sceneFactory("/com/example/demo/about");
     }
 
+    @FXML
+    private void handleDarkModeAction() {
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+
+        if (darkbtn.getStyleClass().contains("dark-mode")) {
+            // Switch to light mode
+            darkbtn.getStyleClass().remove("dark-mode");
+            pdfPagesContainer.setStyle("-fx-background-color: white;");
+            headerAnchorPane.setStyle("-fx-background-color: #f4f4f4;");
+            rightSidebar.setStyle("-fx-background-color: #a4bc92;");
+            scrollPane.setStyle("-fx-background-color: white;");
+        } else {
+            // Switch to dark mode
+            darkbtn.getStyleClass().add("dark-mode");
+            pdfPagesContainer.setStyle("-fx-background-color: #1c1c1c;");
+            headerAnchorPane.setStyle("-fx-background-color: #252525;");
+            rightSidebar.setStyle("-fx-background-color: #252525;");
+            scrollPane.setStyle("-fx-background-color: #1c1c1c;");
+
+        }
+    }
+
+
+
+    @FXML
+    private void applyBlueLightFilter() {
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+
+        pdfPagesContainer.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            Image image = imageView.getImage();
+
+            PixelReader pixelReader = image.getPixelReader();
+            int width = (int) image.getWidth();
+            int height = (int) image.getHeight();
+            WritableImage filteredImage = new WritableImage(width, height);
+            PixelWriter pixelWriter = filteredImage.getPixelWriter();
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    Color color = pixelReader.getColor(x, y);
+
+                    double red = ((Color) color).getRed();
+                    double green = color.getGreen();
+                    double blue = color.getBlue() * 0.8;
+
+                    pixelWriter.setColor(x, y, new Color(red, green, blue, color.getOpacity()));
+                }
+            }
+
+            // Update the ImageView with the filtered image
+            imageView.setImage(filteredImage);
+        });
+    }
+
+
 
 
 
@@ -132,17 +224,18 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private void handleZoomInAction() {
-        double currentZoom = scrollPane.getContent().getScaleX();
-        scrollPane.getContent().setScaleX(currentZoom + 0.1);
-        scrollPane.getContent().setScaleY(currentZoom + 0.1);
+        double currentZoom = pdfPagesContainer.getScaleX();
+        pdfPagesContainer.setScaleX(currentZoom + 0.1);
+        pdfPagesContainer.setScaleY(currentZoom + 0.1);
     }
 
     @FXML
     private void handleZoomOutAction() {
-        double currentZoom = scrollPane.getContent().getScaleX();
-        scrollPane.getContent().setScaleX(currentZoom - 0.1);
-        scrollPane.getContent().setScaleY(currentZoom - 0.1);
+        double currentZoom = pdfPagesContainer.getScaleX();
+        pdfPagesContainer.setScaleX(currentZoom - 0.1);
+        pdfPagesContainer.setScaleY(currentZoom - 0.1);
     }
+
 
     private void renderPdf(File file) throws IOException {
         PDDocument document = PDDocument.load(file);
@@ -154,44 +247,31 @@ public class PdfReaderController implements Initializable {
         pdfPagesAnchorPane.getChildren().clear();
         scrollPane.setVvalue(0.0);
 
+        scrollPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+            fitPdfToScrollPane();
+        });
+        scrollPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+            fitPdfToScrollPane();
+        });
+
         VBox pdfPagesContainer = new VBox();
         pdfPagesContainer.setFillWidth(true);
-
-        // Set margin for the VBox (centering it vertically)
-        Insets vboxMargin = new Insets(20, 0, 20, 0);
-        VBox.setMargin(pdfPagesContainer, vboxMargin);
-
-        // Bind the VBox height to the ScrollPane height
-        pdfPagesContainer.prefHeightProperty().bind(scrollPane.heightProperty());
-
-        // Add the VBox to an AnchorPane
-        AnchorPane anchorPane = new AnchorPane(pdfPagesContainer);
-        pdfPagesAnchorPane.getChildren().add(anchorPane);
-
-        // Update the VBox width when the ScrollPane width changes
-        scrollPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            double scrollPaneWidth = newValue.doubleValue();
-            double vboxWidth = scrollPaneWidth - vboxMargin.getLeft() - vboxMargin.getRight();
-            pdfPagesContainer.setPrefWidth(vboxWidth);
-        });
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
             PDPage page = document.getPage(i);
             BufferedImage image = pdfRenderer.renderImageWithDPI(i, 96);
             ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
             imageView.setPreserveRatio(true);
+            imageView.fitWidthProperty().bind(pdfPagesAnchorPane.widthProperty()); // Bind width to anchor pane
 
-            StackPane imageContainer = new StackPane(imageView);
-            imageContainer.setStyle("-fx-background-color: white");
-
-            pdfPagesContainer.getChildren().add(imageContainer);
-            VBox.setMargin(imageContainer, new Insets(10));
+            pdfPagesContainer.getChildren().add(imageView);
+            VBox.setMargin(imageView, new Insets(10));
         }
 
-        // Center the VBox within the ScrollPane vertically
-        VBox.setVgrow(pdfPagesContainer, Priority.ALWAYS);
-
+        pdfPagesAnchorPane.getChildren().add(pdfPagesContainer);
         scrollPane.setContent(pdfPagesAnchorPane);
+
+        fitPdfToScrollPane(); // Fit the PDF to the scrollpane initially
 
         // Update the ListView with page numbers
         for (int i = 1; i <= document.getNumberOfPages(); i++) {
@@ -203,20 +283,33 @@ public class PdfReaderController implements Initializable {
             if (newValue != null) {
                 int selectedIndex = listView.getSelectionModel().getSelectedIndex();
                 scrollPane.setVvalue((double) selectedIndex / document.getNumberOfPages());
-                updatePageNumberText(selectedIndex + 1, document.getNumberOfPages());
             }
         });
+    }
 
-        // Add listener to scrollPane vvalue property to update pageNumberTextField
-        scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-            int currentPage = (int) Math.ceil(newValue.doubleValue() * document.getNumberOfPages());
-            updatePageNumberText(currentPage, document.getNumberOfPages());
+    private void fitPdfToScrollPane() {
+        double scrollPaneWidth = scrollPane.getWidth();
+        double scrollPaneHeight = scrollPane.getHeight();
+
+        pdfPagesAnchorPane.setPrefWidth(scrollPaneWidth);
+        pdfPagesAnchorPane.setPrefHeight(scrollPaneHeight);
+
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+
+        pdfPagesContainer.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            double pageWidth = imageView.getImage().getWidth();
+            double pageHeight = imageView.getImage().getHeight();
+
+            double scaleX = scrollPaneWidth / pageWidth;
+            double scaleY = scrollPaneHeight / pageHeight;
+            double scale = Math.min(scaleX, scaleY);
+
+            imageView.fitWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+            imageView.setFitHeight(pageHeight * scale);
         });
     }
 
-    private void updatePageNumberText(int currentPage, int totalPages) {
-        pageNumberTextField.setText(currentPage + " / " + totalPages);
-    }
 
 
 

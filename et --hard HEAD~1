@@ -1,0 +1,93 @@
+[33mcommit 187020d5d93fa0fc547f8984db401d700beb1405[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: fekadusisay21 <fekadusisay07@gmail.com>
+Date:   Fri Jun 9 01:02:13 2023 +0300
+
+    new functionalities added
+
+[33mcommit a4a690875db62e79cf086fc834829f379a3b5ba5[m
+Merge: 86fc528 1bb4045
+Author: fekadusisay21 <132390088+fekadusisay21@users.noreply.github.com>
+Date:   Wed Jun 7 00:27:46 2023 +0300
+
+    Merge pull request #3 from fekadusisay21/main
+    
+    eye care function added
+
+[33mcommit 1bb4045acb634545076d85d196b8d64c28d20894[m
+Author: fekadusisay21 <fekadusisay07@gmail.com>
+Date:   Wed Jun 7 00:23:43 2023 +0300
+
+    eye care function added
+
+[33mcommit 86fc5280ab98fd658effb98df67d081fcd50080f[m
+Merge: d124045 11adff7
+Author: fekadusisay21 <132390088+fekadusisay21@users.noreply.github.com>
+Date:   Mon Jun 5 13:21:31 2023 +0300
+
+    Merge pull request #2 from fekadusisay21/main
+    
+    about us page added
+
+[33mcommit 11adff7a99a23fd634dd6c2b0fc20d6ddefe22fa[m
+Author: fekadusisay21 <fekadusisay07@gmail.com>
+Date:   Mon Jun 5 12:46:54 2023 +0300
+
+    about us page added
+
+[33mcommit d1240457206fd0d22cb0b4429363ba8e26082928[m
+Author: my account <taberihun07@gmail.com>
+Date:   Thu Jun 1 04:47:57 2023 -0700
+
+    Zoom-in and zoom-out functionality and layout flexiabilty
+
+[33mcommit 347c16070296e83721295fe076f1a5554d5b6a13[m
+Merge: 4677ea7 2c954f2
+Author: fekadusisay21 <132390088+fekadusisay21@users.noreply.github.com>
+Date:   Mon May 29 14:49:12 2023 +0300
+
+    Merge pull request #1 from fekadusisay21/main
+    
+    Close and Exit handling
+
+[33mcommit 2c954f2b23d098f3db7867a03ddd013307a394e1[m
+Author: knowone <hailemichael085@gmail.com>
+Date:   Mon May 29 14:32:17 2023 +0300
+
+    Close and Exit handling
+
+[33mcommit 4677ea797e7ba08bb487560db76db8ba4c37497e[m
+Author: my account <taberihun07@gmail.com>
+Date:   Sun May 28 13:10:52 2023 -0700
+
+    render works
+
+[33mcommit 22a050dba0978d9649be4e143f0031ef47daaf9e[m
+Author: my account <taberihun07@gmail.com>
+Date:   Sun May 28 03:09:17 2023 -0700
+
+    make the program to render pdf file
+
+[33mcommit 8ae532e607c672612951dab12ac69f87b77a406d[m
+Author: my account <taberihun07@gmail.com>
+Date:   Sun May 28 02:05:06 2023 -0700
+
+    the first layout showcase
+
+[33mcommit dd675b78cac4a50b87cf09bd69d7c31f91957b1b[m
+Merge: 9c999ed 489e2ce
+Author: my account <taberihun07@gmail.com>
+Date:   Fri May 12 13:40:55 2023 -0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit 9c999ed45fc330af990bd1d659bec00a720eae7a[m
+Author: my account <taberihun07@gmail.com>
+Date:   Fri May 12 13:37:53 2023 -0700
+
+    scene builder gui first version
+
+[33mcommit 489e2ce1992a4d5aa6b9816201e7f2426b17bca7[m
+Author: berihun <105263776+Berihun101@users.noreply.github.com>
+Date:   Thu May 4 05:49:54 2023 -0700
+
+    Initial commit
