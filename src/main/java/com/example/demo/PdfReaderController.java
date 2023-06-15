@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -183,8 +184,6 @@ public class PdfReaderController implements Initializable {
         }
     }
 
-
-
     @FXML
     private void applyBlueLightFilter() {
         VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
@@ -216,24 +215,19 @@ public class PdfReaderController implements Initializable {
         });
     }
 
-
-
-
-
-
-
     @FXML
     private void handleZoomInAction() {
-        double currentZoom = pdfPagesContainer.getScaleX();
-        pdfPagesContainer.setScaleX(currentZoom + 0.1);
-        pdfPagesContainer.setScaleY(currentZoom + 0.1);
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+        pdfPagesContainer.setScaleX(pdfPagesContainer.getScaleX() * 1.1);
+        pdfPagesContainer.setScaleY(pdfPagesContainer.getScaleY() * 1.1);
     }
+
 
     @FXML
     private void handleZoomOutAction() {
-        double currentZoom = pdfPagesContainer.getScaleX();
-        pdfPagesContainer.setScaleX(currentZoom - 0.1);
-        pdfPagesContainer.setScaleY(currentZoom - 0.1);
+        VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
+        pdfPagesContainer.setScaleX(pdfPagesContainer.getScaleX() / 1.1);
+        pdfPagesContainer.setScaleY(pdfPagesContainer.getScaleY() / 1.1);
     }
 
 
@@ -241,7 +235,7 @@ public class PdfReaderController implements Initializable {
         PDDocument document = PDDocument.load(file);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
 
-        listView.getItems().clear();
+
         pageNumberTextField.setText("1");
 
         pdfPagesAnchorPane.getChildren().clear();
@@ -273,18 +267,9 @@ public class PdfReaderController implements Initializable {
 
         fitPdfToScrollPane(); // Fit the PDF to the scrollpane initially
 
-        // Update the ListView with page numbers
-        for (int i = 1; i <= document.getNumberOfPages(); i++) {
-            listView.getItems().add(Integer.toString(i));
-        }
 
-        // Set the event handler for ListView selection
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-                scrollPane.setVvalue((double) selectedIndex / document.getNumberOfPages());
-            }
-        });
+
+
     }
 
     private void fitPdfToScrollPane() {
@@ -309,14 +294,6 @@ public class PdfReaderController implements Initializable {
             imageView.setFitHeight(pageHeight * scale);
         });
     }
-
-
-
-
-
-
-
-
 
 
     private Image convertPdfPageToImage(PDFRenderer pdfRenderer, int pageIndex) throws IOException {
