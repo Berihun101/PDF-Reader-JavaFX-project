@@ -21,6 +21,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane id="anchorPane" fx:id="anchorPane" prefHeight="634.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.PdfReaderController">
 
@@ -164,5 +167,15 @@
                 </AnchorPane>
             </children>
         </VBox>
+        <ListView fx:id="recentFilesListView" layoutY="189.0" onMouseClicked="#handleRecentFileClick" prefHeight="444.0" prefWidth="277.0">
+         <effect>
+            <Blend />
+         </effect></ListView>
+      <Label text="Label" />
+      <Label layoutX="97.0" layoutY="121.0" text="Recent Files" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

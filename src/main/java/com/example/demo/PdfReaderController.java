@@ -1,5 +1,3 @@
-package com.example.demo;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,17 +21,27 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.MouseEvent;
 
 import static com.example.demo.PdfApp.sceneFactory;
+
 
 public class PdfReaderController implements Initializable {
 
@@ -44,6 +52,8 @@ public class PdfReaderController implements Initializable {
     @FXML
     private ScrollPane scrollPane;
 
+     @FXML
+private ListView<String> recentFilesListView;
     @FXML
     private AnchorPane anchorPane;
 
@@ -87,21 +97,23 @@ public class PdfReaderController implements Initializable {
 
     @FXML
     private void handleOpenAction() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open PDF File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        File selectedFile = fileChooser.showOpenDialog(null);
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open PDF File");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+    File selectedFile = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null) {
-            try {
-                // Initialize the scrollPane object before calling renderPdf()
-                scrollPane = new ScrollPane();
-                renderPdf(selectedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    if (selectedFile != null) {
+        try {
+            // Initialize the scrollPane object before calling renderPdf()
+            scrollPane = new ScrollPane();
+            renderPdf(selectedFile);
+            // Save the recently opened file
+            saveRecentFile(selectedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+}
     @FXML
     private void handleCloseAction() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -156,6 +168,25 @@ public class PdfReaderController implements Initializable {
             }
         });
     }
+    @FXML
+    private void handleRecentFileClick(MouseEvent event) throws IOException{
+    if (event.getClickCount() == 2) { // Check if it's a double-click
+        String selectedFilePath = recentFilesListView.getSelectionModel().getSelectedItem();
+        if (selectedFilePath != null) {
+            File selectedFile = new File(selectedFilePath);
+            if (selectedFile.exists()) {
+                renderPdf(selectedFile); // Call the existing method to render the PDF
+            } else {
+                // Show an alert if the file does not exist
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("File not found");
+                alert.setHeaderText("The selected file could not be found.");
+                alert.setContentText("Please check if the file has been moved or deleted.");
+                alert.showAndWait();
+            }
+        }
+    }
+}
 
     @FXML
     private void handleAboutAction() throws IOException {
@@ -271,6 +302,66 @@ public class PdfReaderController implements Initializable {
 
 
     }
+    private void loadRecentFiles() {
+    List<String> recentFiles = new ArrayList<>();
+    Path recentFilesPath = Paths.get("recent_files.txt");
+
+    // Read existing file paths
+    try (BufferedReader reader = Files.newBufferedReader(recentFilesPath)) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            recentFiles.add(line);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    // Update the ListView with the recent files (up to 4)
+    recentFilesListView.getItems().clear();
+    for (int i = 0; i < Math.min(4, recentFiles.size()); i++) {
+        recentFilesListView.getItems().add(recentFiles.get(i));
+    }
+}
+
+
+    private void saveRecentFile(File file) {
+    List<String> recentFiles = new ArrayList<>();
+    Path recentFilesPath = Paths.get("recent_files.txt");
+
+    // Read existing file paths
+    try (BufferedReader reader = Files.newBufferedReader(recentFilesPath)) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            recentFiles.add(line);
+        }
+    } catch (IOException e) {
+        // If the file doesn't exist, create it
+        if (!Files.exists(recentFilesPath)) {
+            try {
+                Files.createFile(recentFilesPath);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    // Update the list with the new file path
+    recentFiles.remove(file.getAbsolutePath());
+    recentFiles.add(0, file.getAbsolutePath());
+
+    // Write the updated list back to the file
+    try (BufferedWriter writer = Files.newBufferedWriter(recentFilesPath)) {
+        for (String filePath : recentFiles) {
+            writer.write(filePath);
+            writer.newLine();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    // Update the ListView with the new recent files
+    loadRecentFiles();
+}
 
     private void fitPdfToScrollPane() {
         double scrollPaneWidth = scrollPane.getWidth();
@@ -325,6 +416,7 @@ public class PdfReaderController implements Initializable {
 
         // Set the pageNumberTextField to stretch horizontally
         pageNumberTextField.setMaxWidth(Double.MAX_VALUE);
+        loadRecentFiles();
     }
 
 
