@@ -45,6 +45,12 @@ public class PdfReaderController implements Initializable {
     private ScrollPane scrollPane;
 
     @FXML
+    private HBox hBox;
+
+    @FXML
+    private Label pageName;
+
+    @FXML
     private AnchorPane anchorPane;
 
     @FXML
@@ -84,6 +90,7 @@ public class PdfReaderController implements Initializable {
     private VBox rightSidebar;
 
     private Stage stage;
+    private Label previousPageLabel;
 
     @FXML
     private void handleOpenAction() {
@@ -93,15 +100,54 @@ public class PdfReaderController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            try {
-                // Initialize the scrollPane object before calling renderPdf()
-                scrollPane = new ScrollPane();
-                renderPdf(selectedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Thread renderThread = new Thread(() -> {
+                try {
+                    // Update the PDF name label with a plus icon
+                    ImageView plusIcon = new ImageView(new Image(getClass().getResourceAsStream("/assets/plus.png")));
+                    plusIcon.setFitWidth(12);
+                    plusIcon.setFitHeight(12);
+                    Label plusLabel = new Label(selectedFile.getName(), plusIcon);
+                    plusLabel.getStyleClass().add("plus-label");
+
+                    // Clear the scroll pane content when the plus icon is clicked
+                    plusLabel.setOnMouseClicked(event -> {
+                        pdfPagesAnchorPane.getChildren().clear();
+                    });
+
+                    // Check if there was a previous page label
+                    if (previousPageLabel != null) {
+                        // Reset the background color of the previous label
+                        previousPageLabel.setStyle("-fx-background-color: white;");
+                        // Add some spacing between the labels
+                        HBox.setMargin(plusLabel, new Insets(0, 5, 0, 5));
+                    }
+
+                    // Add the new page label to the HBox
+                    Platform.runLater(() -> {
+                        hBox.getChildren().add(plusLabel);
+                        previousPageLabel = plusLabel;
+                    });
+
+                    // Render the PDF
+                    Platform.runLater(() -> {
+                        try {
+                            renderPdf(selectedFile, plusLabel);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            renderThread.start();
         }
     }
+
+
+
+
+
     @FXML
     private void handleCloseAction() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -231,10 +277,9 @@ public class PdfReaderController implements Initializable {
     }
 
 
-    private void renderPdf(File file) throws IOException {
+    private void renderPdf(File file, Label label) throws IOException {
         PDDocument document = PDDocument.load(file);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
-
 
         pageNumberTextField.setText("1");
 
@@ -267,9 +312,10 @@ public class PdfReaderController implements Initializable {
 
         fitPdfToScrollPane(); // Fit the PDF to the scrollpane initially
 
-
-
-
+        // Set the background color for the label
+        Platform.runLater(() -> {
+            label.setStyle("-fx-background-color: #8ac4d0;"); // Set the desired background color
+        });
     }
 
     private void fitPdfToScrollPane() {
@@ -290,18 +336,16 @@ public class PdfReaderController implements Initializable {
             double scaleY = scrollPaneHeight / pageHeight;
             double scale = Math.min(scaleX, scaleY);
 
-            imageView.fitWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+            imageView.fitWidthProperty().bind(scrollPane.widthProperty().subtract(40)); // Adjust the margin as needed
             imageView.setFitHeight(pageHeight * scale);
+
+            // Center the imageView within the scrollPane horizontally
+            double horizontalPadding = (scrollPaneWidth - imageView.getFitWidth()) / 2;
+            double leftMargin = 150; // Adjust the left margin as needed
+            imageView.setTranslateX(horizontalPadding + leftMargin);
         });
     }
 
-
-    private Image convertPdfPageToImage(PDFRenderer pdfRenderer, int pageIndex) throws IOException {
-        // Adjust the DPI value as needed for the desired image quality
-        final int dpi = 150;
-        BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, dpi);
-        return javafx.embed.swing.SwingFXUtils.toFXImage(bufferedImage,null);
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -310,6 +354,8 @@ public class PdfReaderController implements Initializable {
         AnchorPane.setBottomAnchor(anchorPane, 0.0);
         AnchorPane.setLeftAnchor(anchorPane, 0.0);
         AnchorPane.setRightAnchor(anchorPane, 0.0);
+        scrollPane.getStyleClass().add("scroll-pane");
+        hBox.prefWidthProperty().bind(scrollPane.widthProperty());
 
         // Set the HBox constraints for the scrollPane content
         HBox.setHgrow(pdfPagesAnchorPane, Priority.ALWAYS);

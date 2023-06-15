@@ -14,4 +14,17 @@
 -fx-color:white;
 -fx-text-fill:white;
 }
+.scroll-pane .scroll-bar {
+    -fx-pref-width: 40px; /* Adjust the width as desired */
+    -fx-pref-height: 10px; /* Adjust the height as desired */
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-padding: 5px; /* Adjust the padding as desired */
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-padding: 5px; /* Adjust the padding as desired */
+}
+
 
