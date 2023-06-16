@@ -211,24 +211,67 @@ private ListView<String> recentFilesListView;
         });
     }
     @FXML
-    private void handleRecentFileClick(MouseEvent event) throws IOException{
-    if (event.getClickCount() == 2) { // Check if it's a double-click
-        String selectedFilePath = recentFilesListView.getSelectionModel().getSelectedItem();
-        if (selectedFilePath != null) {
-            File selectedFile = new File(selectedFilePath);
-            if (selectedFile.exists()) {
-                renderPdf(selectedFile, pageName); // Call the existing method to render the PDF
-            } else {
-                // Show an alert if the file does not exist
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("File not found");
-                alert.setHeaderText("The selected file could not be found.");
-                alert.setContentText("Please check if the file has been moved or deleted.");
-                alert.showAndWait();
+    private void handleRecentFileClick(MouseEvent event) throws IOException {
+        if (event.getClickCount() == 2) { // Check if it's a double-click
+            String selectedFilePath = recentFilesListView.getSelectionModel().getSelectedItem();
+            if (selectedFilePath != null) {
+                File selectedFile = new File(selectedFilePath);
+                if (selectedFile.exists()) {
+                    Thread renderThread = new Thread(() -> {
+                        try {
+                            // Update the PDF name label with a plus icon
+                            ImageView plusIcon = new ImageView(new Image(getClass().getResourceAsStream("/assets/plus.png")));
+                            plusIcon.setFitWidth(12);
+                            plusIcon.setFitHeight(12);
+                            Label plusLabel = new Label(selectedFile.getName(), plusIcon);
+                            plusLabel.getStyleClass().add("plus-label");
+
+                            // Clear the scroll pane content when the plus icon is clicked
+                            plusLabel.setOnMouseClicked(labelEvent -> {
+                                pdfPagesAnchorPane.getChildren().clear();
+                            });
+
+                            // Check if there was a previous page label
+                            if (previousPageLabel != null) {
+                                // Reset the background color of the previous label
+                                previousPageLabel.setStyle("-fx-background-color: white;");
+                                // Add some spacing between the labels
+                                HBox.setMargin(plusLabel, new Insets(0, 5, 0, 5));
+                            }
+
+                            // Add the new page label to the HBox
+                            Platform.runLater(() -> {
+                                hBox.getChildren().add(plusLabel);
+                                previousPageLabel = plusLabel;
+                            });
+
+                            // Render the PDF
+                            Platform.runLater(() -> {
+                                try {
+                                    renderPdf(selectedFile, plusLabel);
+                                    saveRecentFile(selectedFile);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    renderThread.start();
+                } else {
+                    // Show an alert if the file does not exist
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("File not found");
+                    alert.setHeaderText("The selected file could not be found.");
+                    alert.setContentText("Please check if the file has been moved or deleted.");
+                    alert.showAndWait();
+                }
             }
         }
     }
-}
+
+
 
     @FXML
     private void handleAboutAction() throws IOException {

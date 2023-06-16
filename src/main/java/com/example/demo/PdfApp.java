@@ -25,8 +25,8 @@ public class PdfApp extends Application {
         controller.initialize(null, null);
         stage.setTitle("Pdf Reader");
         stage.setResizable(true);
-//        Image image = new Image("");
-//        stage.getIcons().add(image);
+        Image image = new Image(PdfApp.class.getResource("/assets/logo.png").toExternalForm());
+        stage.getIcons().add(image);
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
