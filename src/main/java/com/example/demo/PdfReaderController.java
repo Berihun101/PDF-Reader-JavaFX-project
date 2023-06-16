@@ -103,6 +103,7 @@ private ListView<String> recentFilesListView;
 
     private Stage stage;
     private Label previousPageLabel;
+    private int currentPageNumber = 1;
 
     @FXML
     private void handleOpenAction() {
@@ -229,6 +230,13 @@ private ListView<String> recentFilesListView;
                             // Clear the scroll pane content when the plus icon is clicked
                             plusLabel.setOnMouseClicked(labelEvent -> {
                                 pdfPagesAnchorPane.getChildren().clear();
+
+
+                            });
+
+                            currentPageNumber = 1;
+                            Platform.runLater(() -> {
+                                pageNumberTextField.setText(String.valueOf(currentPageNumber));
                             });
 
                             // Check if there was a previous page label
@@ -243,6 +251,7 @@ private ListView<String> recentFilesListView;
                             Platform.runLater(() -> {
                                 hBox.getChildren().add(plusLabel);
                                 previousPageLabel = plusLabel;
+
                             });
 
                             // Render the PDF
@@ -253,6 +262,7 @@ private ListView<String> recentFilesListView;
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+
                             });
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -336,6 +346,7 @@ private ListView<String> recentFilesListView;
         VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
         pdfPagesContainer.setScaleX(pdfPagesContainer.getScaleX() * 1.1);
         pdfPagesContainer.setScaleY(pdfPagesContainer.getScaleY() * 1.1);
+        updateCurrentPageNumber();
     }
 
 
@@ -344,6 +355,13 @@ private ListView<String> recentFilesListView;
         VBox pdfPagesContainer = (VBox) pdfPagesAnchorPane.getChildren().get(0);
         pdfPagesContainer.setScaleX(pdfPagesContainer.getScaleX() / 1.1);
         pdfPagesContainer.setScaleY(pdfPagesContainer.getScaleY() / 1.1);
+        updateCurrentPageNumber();
+    }
+
+    private void updateCurrentPageNumber() {
+        int totalPages = document.getNumberOfPages();
+        double scrollValue = (currentPageNumber - 1) / (double) totalPages;
+        scrollPane.setVvalue(scrollValue);
     }
 
 
@@ -368,7 +386,7 @@ private ListView<String> recentFilesListView;
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
             PDPage page = document.getPage(i);
-            BufferedImage image = pdfRenderer.renderImageWithDPI(i, 96);
+            BufferedImage image = pdfRenderer.renderImageWithDPI(i, 120);
             ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
             imageView.setPreserveRatio(true);
             imageView.fitWidthProperty().bind(pdfPagesAnchorPane.widthProperty()); // Bind width to anchor pane
@@ -386,6 +404,12 @@ private ListView<String> recentFilesListView;
         Platform.runLater(() -> {
             label.setStyle("-fx-background-color: #8ac4d0;"); // Set the desired background color
         });
+        scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            int totalPages = document.getNumberOfPages();
+            currentPageNumber = (int) (totalPages * newValue.doubleValue()) + 1;
+            pageNumberTextField.setText(String.valueOf(currentPageNumber));
+        });
+
     }
     private void loadRecentFiles() {
     List<String> recentFiles = new ArrayList<>();
@@ -503,6 +527,24 @@ private ListView<String> recentFilesListView;
         pageNumberTextField.setMaxWidth(Double.MAX_VALUE);
         loadRecentFiles();
     }
+
+    @FXML
+    private void handlePageNumberTextFieldAction(ActionEvent event) {
+        try {
+            int newPageNumber = Integer.parseInt(pageNumberTextField.getText());
+            int totalPages = document.getNumberOfPages();
+
+            if (newPageNumber >= 1 && newPageNumber <= totalPages) {
+                double scrollValue = (newPageNumber - 1) / (double) totalPages;
+                scrollPane.setVvalue(scrollValue);
+            } else {
+                pageNumberTextField.setText(String.valueOf(currentPageNumber));
+            }
+        } catch (NumberFormatException e) {
+            pageNumberTextField.setText(String.valueOf(currentPageNumber));
+        }
+    }
+
 
 
 
